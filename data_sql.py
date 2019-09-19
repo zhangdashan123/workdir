@@ -38,7 +38,6 @@ class MySql(object):
             print(e, sql)
 
     def select_sql(self, sql):
-        print('开始查询数据...')
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
         return result

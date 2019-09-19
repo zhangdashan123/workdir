@@ -7,6 +7,8 @@ import urllib3
 import requests
 from dateutil.relativedelta import relativedelta
 
+from ExpediaDetail import ExPeDiaDetail
+
 urllib3.disable_warnings()
 
 """
@@ -83,6 +85,7 @@ class ExPeDiaSpider(object):
     def get_data(self, response):
         """从json数据中提取数据"""
         now_time = datetime.date.today()
+        now_time = now_time - relativedelta(days=-1)
         next_date = now_time - relativedelta(days=-1)
         now_time = str(now_time).replace('-', '/')
         next_date = str(next_date).replace('-', '/')
@@ -94,10 +97,12 @@ class ExPeDiaSpider(object):
                 detail_url = 'https://www.expedia.com'+detail_url.split('www.expedia.com')[-1].split('&candidateHmGuid')[0]
                 detail_url = unquote(detail_url)
                 detail_url = unquote(detail_url)
-                print('截取的detail_url:', detail_url)
+                # print('截取的detail_url:', detail_url)
             detail_url = detail_url + 'chkin={}&chkout={}&'.format(now_time, next_date)  # 酒店入住日期
             hotel_name = hotel_data.get('retailHotelInfoModel').get('localizedHotelName')  # 酒店名称
             print(detail_url, hotel_name, area)
+            ed = ExPeDiaDetail(detail_url, hotel_name, area)
+            ed.get_data()
 
 
 if __name__ == '__main__':
