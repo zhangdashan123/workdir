@@ -2732,8 +2732,8 @@ if 'infosite.offersData' in str_data:
     regex1 = re.compile(r'"roomTypeCode":.*?"(.*?)".*?"name":.*?"(.*?)"', re.S)
     resp1 = regex1.findall(str_data)  # 房子类型
     print(resp1)
-    regex2 = re.compile(r'"hotelID".*?"roomTypeCode": "(.*?)".*?"displayPrice": "(.*?)"', re.S)
-    # regex2 = re.compile(r'"hotelID":.*?"roomTypeCode":.*?"(.*?)".*?"displayPrice":.*?"(.*?)"', re.S)
+    # regex2 = re.compile(r'"hotelID".*?"roomTypeCode": "(.*?)".*?"displayPrice": "(.*?)"', re.S)
+    regex2 = re.compile(r'"hotelID":.*?"roomTypeCode":.?"(.*?)".*?"displayPrice":.?"(.*?)"', re.S)
     resp2 = regex2.findall(str_data)  # 房子价格
     print(resp2)
     # resp_dict = dict()

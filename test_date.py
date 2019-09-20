@@ -5,7 +5,6 @@ from dateutil.relativedelta import relativedelta
 # print(now_time)
 # next_date = now_time - relativedelta(days=+1)
 # print(next_date)
-str1 = '2019-9-20'
-str2 = '2019-10-21'
-if date(str1) < date(str2):
-    print('hehe')
+str1 = 'MC1=GUID=c5af0e72ed394922b54266aefae94230'
+str_li = str1.split('=', 1)
+print(str_li)
