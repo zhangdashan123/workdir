@@ -1,3 +1,4 @@
+import re
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
@@ -5,6 +6,8 @@ from dateutil.relativedelta import relativedelta
 # print(now_time)
 # next_date = now_time - relativedelta(days=+1)
 # print(next_date)
-str1 = 'MC1=GUID=c5af0e72ed394922b54266aefae94230'
-str_li = str1.split('=', 1)
-print(str_li)
+str1 = 'cny1334'
+regex = re.compile(r'\d+', re.S)
+price_list = regex.findall(str1)
+house_price = ''.join(price_list)
+print(house_price)

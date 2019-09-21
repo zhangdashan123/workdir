@@ -24,7 +24,7 @@ class Run(QThread):
         self.start()
 
     def run(self):
-        num = self.value['num']
+        num = self.value.get('num', '')
         if num == 1:
             self.select_city()
         if num == 2:
@@ -33,6 +33,8 @@ class Run(QThread):
         if num == 3:
             area = self.value['area']
             hotel_name = self.value['hotel_name']
+            print('折线图生成中...')
+            self.show_data2.emit('折线图生成中...')
             self.runs(area, hotel_name)
         if num == 4:
             area = self.value['area']
@@ -67,7 +69,7 @@ class Run(QThread):
         # list_hotel = list(map(lambda x: str(x[0]), result_hotel))
         # print(list_hotel)
         # 查询一个地区的某个酒店中所有的房价种类
-        color = ['r', 'g', 'b', 'w', 'c', 'm', 'y', 'k']
+        color = ['r', 'g', 'b', 'w', 'c', 'm', 'y', 'k', 'black', 'bisque', 'darkorange', 'darkgreen', 'midnightblue', 'darkorchid', 'crimson', 'cyan', 'yellow', 'palegreen', 'firebrick', 'saddlebrown', 'olive']
         total_list = []  # 所有房间类型所需参数
         sql1 = 'select distinct house_name from t_cl_expedia_hotelprcie where area="%s"' \
                'and hotel_name="%s"' % (area, hotel_name)
@@ -76,7 +78,7 @@ class Run(QThread):
         max_date = 0
         max_data = ''
         for color_index, house_type in enumerate(list_type):
-            single_list = []  # 当个房间信息列表
+            single_list = []  # 单个房间信息列表
             # 查询某个房型价格
             sql2 = 'select house_price from t_cl_expedia_hotelprcie where area="%s" ' \
                    'and hotel_name="%s" and house_name = "%s"' % (area, hotel_name, house_type)
@@ -88,6 +90,10 @@ class Run(QThread):
             result_date = self.my.select_sql(sql3)
             list_price = list(map(lambda x: int(x[0]), result_price))
             list_date = list(map(lambda x: str(x[0]), result_date))
+            print(list_price)
+            print(list_date)
+            print(house_type)
+            print(color_index)
             if len(list_date) > max_date:
                 max_date = len(list_date)
                 max_data = [list_date, list_price, house_type, color[color_index]]
@@ -96,6 +102,8 @@ class Run(QThread):
             single_list.append(house_type)
             single_list.append(color[color_index])
             total_list.append(single_list)
+            print('........................................')
+        print('??????????????????????')
         total_list.remove(max_data)
         total_list.insert(0, max_data)
         print(total_list)
@@ -103,9 +111,9 @@ class Run(QThread):
         MatPlotLib().show_images(total_list)
 
 
-# if __name__ == '__main__':
-#     area = '杭州'
-#     hotel_name = '杭州温德姆至尊豪廷大酒店'
-#     # house_name = '皇冠豪华房'
-#     r = Run()
-#     r.runs()
+if __name__ == '__main__':
+    area = '杭州'
+    hotel_name = '香格里拉酒店'
+    # house_name = '皇冠豪华房'
+    r = Run()
+    r.runs(area, hotel_name)

@@ -108,8 +108,12 @@ class ExPeDiaSpider(QThread):
             detail_url = detail_url + 'chkin={}&chkout={}&'.format(now_time, next_date)  # 酒店入住日期
             hotel_name = hotel_data.get('retailHotelInfoModel').get('localizedHotelName')  # 酒店名称
             print(detail_url, hotel_name, area)
-            self.show_data3.emit(area + ':' + hotel_name)
-            self.ed.get_data(detail_url, hotel_name, area)
+            if detail_url and hotel_name:
+                self.show_data3.emit(area + ':' + hotel_name)
+                self.ed.get_data(detail_url, hotel_name, area)
+            else:
+                print(detail_url)
+                print('无详情url和酒店名称...')
 
 
 if __name__ == '__main__':

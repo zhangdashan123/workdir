@@ -27,7 +27,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.thread.start()
         self.r.show_data.connect(self.show_c)  # 显示城市
         self.pushButton.clicked.connect(self.start_2)  # 开始爬虫
-        self.r.show_data2.connect(self.show_d)
+        self.r.show_data2.connect(self.show_d)  # 显示酒店
         self.pushButton_2.clicked.connect(self.quit_sys)  # 结束
 
     def show_b(self):
@@ -35,7 +35,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         data['num'] = 2
         text = self.comboBox.currentText()
         data['text'] = text
-        # print(text)
+        print(text)
         self.thread = threading.Thread(target=self.r.start_task, args=(data, ))
         self.thread.start()
         self.r.show_data1.connect(self.show_a)
@@ -56,6 +56,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         data = dict()
         city_value = self.comboBox.currentText()
         hotel_value = self.comboBox_2.currentText()
+        print(city_value, hotel_value)
         data['num'] = 3
         data['area'] = city_value
         data['hotel_name'] = hotel_value

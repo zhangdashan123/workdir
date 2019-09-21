@@ -56,19 +56,21 @@ class ExPeDiaDetail(object):
                 # print(str_data)
                 if 'infosite.offersData' in str_data:
                     print('进入offersData....')
-                    regex = re.compile(r'infosite\.offersData(.*?)roomsAndRatePlans\.rooms', re.S)
+                    regex = re.compile(r'infosite\.offersData.*?"fromStayDate":', re.S)
+                    regex0 = re.compile(r'var roomsAndRatePlans.*?roomsAndRatePlans\.rooms', re.S)
                     str_data1 = regex.findall(str_data)
-                    # print(str_data1)
-                    if len(str_data1) > 0:
+                    str_data0 = regex0.findall(str_data)
+                    if len(str_data1) > 0 and len(str_data0) > 0:
                         print('.............')
                         str_data = str_data1[0]
+                        str_data0 = str_data0[0]
                     regex1 = re.compile(r'"roomTypeCode":.*?"(.*?)".*?"name":.*?"(.*?)"', re.S)
-                    resp1 = regex1.findall(str_data)  # 房子类型
+                    resp1 = regex1.findall(str_data0)  # 房子类型
                     print(resp1)
                     regex2 = re.compile(r'"hotelID":.*?"roomTypeCode":.?"(.*?)".*?"displayPrice":.?"(.*?)"', re.S)
-                    # regex2 = re.compile(r'"hotelID".*?"roomTypeCode": "(.*?)".*?"displayPrice": "(.*?)"', re.S)
                     resp2 = regex2.findall(str_data)  # 房子价格
                     print(resp2)
+
                     resp_dict = dict()
                     for tuple_data in resp2:
                         if tuple_data[0] not in resp_dict.keys():
@@ -79,7 +81,10 @@ class ExPeDiaDetail(object):
                         house_name = resp_data[1].strip()
                         if house_price and house_price != '0' and '房' in house_name:
                             item = dict()
-                            house_price = house_price.replace('CNY', '').replace(',', '')
+                            # house_price = house_price.replace('CNY', '').replace(',', '')
+                            regex = re.compile(r'\d+', re.S)
+                            price_list = regex.findall(house_price)
+                            house_price = ''.join(price_list)
                             begin_date = date_info[0][0]
                             end_date = date_info[0][1]
                             print(house_name, house_price, begin_date, end_date, hotel_name, area)
@@ -112,7 +117,10 @@ class ExPeDiaDetail(object):
                         item = dict()
                         house_name = resp_data[0].strip()
                         house_price = resp_data[1].strip()
-                        house_price = house_price.replace('CNY', '').replace(',', '')
+                        # house_price = house_price.replace('CNY', '').replace(',', '')
+                        regex = re.compile(r'\d+', re.S)
+                        price_list = regex.findall(house_price)
+                        house_price = ''.join(price_list)  # 酒店价格
                         begin_date = date_info[0][0]
                         end_date = date_info[0][1]
                         print(house_name, house_price, begin_date, end_date, hotel_name, area)
@@ -123,8 +131,7 @@ class ExPeDiaDetail(object):
                             item['end_date'] = end_date
                             item['hotel_name'] = hotel_name
                             item['area'] = area
-                            if self.bf.isContains(
-                                                                            house_name + house_price + begin_date + end_date + hotel_name + area):  # 判断字符串是否存在
+                            if self.bf.isContains(house_name + house_price + begin_date + end_date + hotel_name + area):  # 判断字符串是否存在
                                 print('exists!')
                             else:
                                 print('not exists!')
@@ -188,8 +195,8 @@ class ExPeDiaDetail(object):
 
 if __name__ == '__main__':
     # url = 'https://www.expedia.com/cn/Hangzhou-Hotels-Atour-Light-Hotel-Westlake-Fengqi-Road-Hangzhou.h33204043.Hotel-Information?rm1=a2&hwrqCacheKey=6461d39b-5077-4061-83ca-a2d93e81a4c9HWRQ1568869729085&cancellable=false&regionId=6084457&vip=false&c=e79d9e11-bfc1-41ab-9dc3-0968ef1fc986&chkin=2019/09/20&chkout=2019/09/21&'
-    url = 'https://www.expedia.com/cn/Hotels-Crowne-Plaza-Hangzhou-Heda.h22949395.Hotel-Information?rm1=a2&hwrqCacheKey=a995f173-aae0-48f9-9c60-bfd1b591f854HWRQ1568703523167&cancellable=false&regionId=6084457&vip=false&c=e95dcb76-9c3b-4f5e-9994-85bb9f38624e&chkin=2019/09/19&chkout=2019/09/20&'
+    url = 'https://www.expedia.com/cn/Kyoto-Hotels-Sakura-Terrace-The-Gallery.h9795712.Hotel-Information?rm1=a2&hwrqCacheKey=bfda3503-f032-4548-b2ea-1658b3ec7123HWRQ1569040073451&cancellable=false&regionId=6131486&vip=false&c=1b876fdd-d114-4aea-aebf-3c8444e27d38&chkin=2019/09/22&chkout=2019/09/23&'
     area = '杭州'
     hotel_name = '香格里拉酒店'
     ed = ExPeDiaDetail()
-    # ed.selenium_data(url, hotel_name, area)
+    ed.get_data(url, hotel_name, area)
